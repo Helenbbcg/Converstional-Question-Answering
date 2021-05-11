@@ -1,0 +1,9 @@
+{
+	"tagMe_token": 								"4a6dbc53-397e-443f-a7e9-4738dd1197c0-843339462",
+	"hyperparameters_frontier_detection": 		[0.6, 0.3, 0.1],
+	"hyperparameters_answer_detection": 		[0.9, 0.1],
+	"number_of_frontier_nodes":					3,
+	"domain":									"tv_series",
+	"domain_options":							["books", "movies", "music", "soccer", "tv_series", "ALL"],
+	"conversations_path":						"/mnt/d/KGM1/KGM/source/old/test_set/test_set_tv_series.json"
+}
