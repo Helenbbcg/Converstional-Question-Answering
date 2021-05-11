@@ -10,12 +10,9 @@ import string_conversions as string
 import graph_processing as gp
 import glove_similarity as spacy 
 import wikidata as wd
-import telegram_api as telegram
 
-#####################################################
-# Candidate queue creation
-#####################################################
 
+# Update data
 
 def update_data(in_data, pp=None):
 	if pp is None:
@@ -51,6 +48,7 @@ def update_data(in_data, pp=None):
 					dict_candidate_1[en[0]] = en[1]
 	return [dict_candidate, dict_candidate_1]
 
+# Candidate queue creation
 # fetching data from online wikidata dump
 def build_candidate_priority_queue_one_entity(entity_id):
 	candidate_priority_queue_one_entity = []
@@ -135,7 +133,6 @@ def fetch_candidate_from_online_wikidata(entity_id):
 
 
 
-
 def build_candidate_queue(graph):
 	candidate_priority_queue = []
 	for node in list(graph.nodes(data=True)):
@@ -195,9 +192,9 @@ def priors_of_entity(entity, max_entity_priors=10292):
 	entity_frequency = wd.entity_frequency(entity)
 	return float(entity_frequency)/float(max_entity_priors)
 
-#####################################################
-###		Fagins algorithm
-#####################################################
+
+# Fagins algorithm
+
 
 def fagins_algorithm(queue1, queue2, queue3, hyperparameters, k=3):
 	h1, h2, h3 = hyperparameters
@@ -493,9 +490,7 @@ def answer_conversation(questions, tagmeToken, hyperparameters, number_of_fronti
 		answers.append(answer)
 	return answers
 
-#####################################################
-###		Load data
-#####################################################
+# Load data
 
 # open the identifier predicates
 with open( "source/old/data/identifier_predicates.json", "r") as data:
@@ -509,8 +504,6 @@ with open( "settings.json", "r") as data:
 	tagmeToken 					= settings['tagMe_token']
 	domain 						= settings['domain']
 	conversations_path			= settings['conversations_path']
-	telegram_chat_id			= settings['telegram_chat_id']
-	telegram_active 			= isinstance(telegram_chat_id, int)
 
 if __name__ == '__main__':
 	# open the conversations
@@ -539,7 +532,7 @@ if __name__ == '__main__':
 	print_results( domain )
 	print_results( "MRR_score: 	" + str((question_counter, (total_mrr_score/float(question_counter)), total_mrr_score)))
 	print_results( "P@1: 		" + str((question_counter, (total_precision_at_1_score/float(question_counter)), total_precision_at_1_score)))
-	print_results( "H@5: 		" + str((question_counter, (total_hit_at_5_score/float(question_counter)), total_hit_at_5_score)))
+	print_results( "HitRate@5: 		" + str((question_counter, (total_hit_at_5_score/float(question_counter)), total_hit_at_5_score)))
 	print_results("\n")
 
 	wd.save_cached_data()
