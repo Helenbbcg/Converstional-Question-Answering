@@ -29,8 +29,8 @@ def get_all_statements_of_entity(entity_id):
 	if statements_dict.get(entity_id, None) is not None:
 		return statements_dict[entity_id]
 	statements = []
-	triples_sub, cardinality_sub = get_all_triples(entity_id, 0)  # entity as subject  三元组以及三元组组数
-	triples_obj, cardinality_obj = get_all_triples(entity_id, 1)  # entity as object   三元组以及三元组组数
+	triples_sub, cardinality_sub = get_all_triples(entity_id, 0)  # entity as subject  Triples and the number of triples
+	triples_obj, cardinality_obj = get_all_triples(entity_id, 1)  # entity as object   Triples and the number of triples
 
 	if cardinality_sub + cardinality_obj > upper_limit:
 		statements_dict[entity_id] = []
@@ -41,17 +41,17 @@ def get_all_statements_of_entity(entity_id):
 		# only consider triples with a wikidata-predicate or if it is an identifier predicate
 		if not pre.startswith("http://www.wikidata.org/") or (wikidata_url_to_wikidata_id(pre) in identifier_predicates):
 			continue
-		# object is statement 在抽取的实体充当主语的三元组里的宾语如果是statement
+		# object is statement Statement is the object of a triplet in which the extracted entity acts as the subject
 		if obj.startswith("http://www.wikidata.org/entity/statement/"):
 			qualifier_statements = get_all_statements_with_qualifier_as_subject(obj)
-			#当宾语是statement且充当qualifier, 获取所有三元组，三元组里这些宾语充当主语
+			# When the object is statement and acts as qualifier, get all triples in which the object acts as the subject
 			qualifiers = []
 			for qualifier_statement in qualifier_statements:
 				if qualifier_statement['predicate'] == "http://www.wikidata.org/prop/statement/" + wikidata_url_to_wikidata_id(pre):
 						obj = qualifier_statement['object']
-						#当qualifier中的谓词是P，原statement接着做宾语
+						# When the predicate in qualifier is P, the original statement is followed as the object
 				elif is_entity_or_literal(wikidata_url_to_wikidata_id(qualifier_statement['object'])):
-					#检查宾语是正常的url还是日期数字 添加到qualifiers(qualifiers里只包含predicate和object)
+					# Check whether objects are normal URLs or date numbers added to qualifiers(qualifiers only contain predicate and objects).
 					qualifiers.append({
 						"qualifier_predicate":{
 							"id": wikidata_url_to_wikidata_id(qualifier_statement['predicate'])
@@ -61,7 +61,7 @@ def get_all_statements_of_entity(entity_id):
 						}})
 			statements.append({'entity': {'id': wikidata_url_to_wikidata_id(sub)}, 'predicate': {'id': wikidata_url_to_wikidata_id(pre)}, 'object': {'id': wikidata_url_to_wikidata_id(obj)}, 'qualifiers': qualifiers})
 		else:
-			#如果宾语就是一个object实体，不存在qualifier
+			# If the object is an object entity, there is no qualifier
 			statements.append({'entity': {'id': wikidata_url_to_wikidata_id(sub)}, 'predicate': {'id': wikidata_url_to_wikidata_id(pre)}, 'object': {'id': wikidata_url_to_wikidata_id(obj)}, 'qualifiers': []})
 	# iterate through all triples in which the entity occurs as the object
 	for triple in triples_obj:
@@ -69,13 +69,13 @@ def get_all_statements_of_entity(entity_id):
 		if not sub.startswith("http://www.wikidata.org/entity/Q") or not pre.startswith("http://www.wikidata.org/") or wikidata_url_to_wikidata_id(pre) in identifier_predicates:
 			continue
 		if sub.startswith("http://www.wikidata.org/entity/statement/"):
-			#获取的三元组中，statement作为主语，则返回三元组，这些三元组中statement作为宾语
+			# Get a triplet with statement as the subject, and returns a triplet in which statement is the object
 			statements_with_qualifier_as_object =  get_statement_with_qualifier_as_object(sub, process)
 			# if no statement was found continue
 			if not statements_with_qualifier_as_object:
 				continue
 			main_sub, main_pred, main_obj = statements_with_qualifier_as_object
-			qualifier_statements = get_all_statements_with_qualifier_as_subject(sub)#获取statement作为主语的qualifier statements
+			qualifier_statements = get_all_statements_with_qualifier_as_subject(sub)# Get the qualifier statements for which statement is the subject
 			qualifiers = []
 			for qualifier_statement in qualifier_statements:
 				if wikidata_url_to_wikidata_id(qualifier_statement['predicate']) == wikidata_url_to_wikidata_id(main_pred):
