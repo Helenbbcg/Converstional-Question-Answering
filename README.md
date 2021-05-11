@@ -1,5 +1,5 @@
 # Converstional-Question-Answering
-Final Year Project
+Final Year Project  
 To use this system, it is approate that a Linux sysytem is used, GPU is even better.
 ## Some packages to be downloaded:
 1.en_vectors_web_lg: vectors trained with GloVe, can be downloaded from "https://nlp.stanford.edu/projects/glove"
