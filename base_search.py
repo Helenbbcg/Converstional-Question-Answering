@@ -30,21 +30,21 @@ When was the first book of the book series The Dwarves published?
 def get_all_triples(entity_id, ind):
     all_triplets = []
     for pat in match_partan[ind]:
-        response = requests.get(pat.format(entity_id))# 通过entity的ID进行查询
+        response = requests.get(pat.format(entity_id))# Query by the ID of the Entity
         requests.packages.urllib3.disable_warnings()
         results = response.json()  # json format
         for cur__ in results['results']['bindings']:
             #if entity_id not in all_triplets.keys():
                 #if (entity_id in cur__['subject']['value']) or (entity_id in cur__['ps_object']['value']):
-                    #all_triplets[entity_id] = [cur__['subject']['value'], cur__['p']['value'],cur__['ps_bject']['value']]  # 三元组
+                    #all_triplets[entity_id] = [cur__['subject']['value'], cur__['p']['value'],cur__['ps_bject']['value']]  # Triples
             #else:
                 #if (entity_id in cur__['subject']['value']) or (entity_id in cur__['ps_object']['value']):
                     #all_triplets[entity_id].append([cur__['subject']['value'], cur__['p']['value'], cur__['ps_object']['value']])
             if 'statement' in cur__.keys():
-                all_triplets.append([cur__['subject']['value'], cur__['p']['value'], cur__['statement']['value']])  # 三元组
+                all_triplets.append([cur__['subject']['value'], cur__['p']['value'], cur__['statement']['value']])  # Triples
             else:
                 if (entity_id in cur__['subject']['value']) or (entity_id in cur__['object']['value']):
-                    all_triplets.append([cur__['subject']['value'], cur__['p']['value'], cur__['object']['value']])  # 三元组
+                    all_triplets.append([cur__['subject']['value'], cur__['p']['value'], cur__['object']['value']])  # Triples
 
     return all_triplets, len(all_triplets)
 
