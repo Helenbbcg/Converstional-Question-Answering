@@ -55,7 +55,6 @@ while input_str != "#":
                         all_triplets[entity_id].append([cur__['subject']['value'], cur__['statement']['value'], "MyEntity"])  # Triples
 
         pkl.dump(all_triplets, open('triplsts_search_result/' + input_str + ".json", mode='wb'))
-        # 链接查询
         found = False
         for cur_sub, cur_ob in zip(all_triplets.keys(), all_triplets.values()):
             # Iterate through all triples：Form：{Entity1：[<e1, r1, e2>, <e3, r2, e4>, ...], Entity2：[<e1, r1, e2>, <e3, r2, e4>, ...]}
